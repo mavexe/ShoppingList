@@ -20,7 +20,7 @@
         android:padding="36dp">
 
         <TextView
-            android:id="@+id/txViewItem"
+            android:id="@+id/txViewName"
             android:layout_width="860dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
