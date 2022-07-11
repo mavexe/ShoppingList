@@ -1,28 +1,25 @@
 package com.damirmustafin.materialdesign.presentation
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.damirmustafin.materialdesign.data.ShopListRepositoryImpl
 import com.damirmustafin.materialdesign.domain.*
 
 class MainViewModel: ViewModel(){
 
-    private val repositoryImpl = ShopListRepositoryImpl
+    private val repository = ShopListRepositoryImpl
 
-    private val getShopListUseCase = GetShopList(repositoryImpl)
-    private val ChangeShopItemUseCase = ChangeShopItemUseCase(repositoryImpl)
-    private val deleteItem = DeleteItemUseCase(repositoryImpl)
+    private val getShopListUseCase  = GetShopListUseCase(repository)
+    private val deleteShopItemUseCase = DeleteItemUseCase(repository)
+    private val editShopItemUseCase = ChangeShopItemUseCase(repository)
 
-    val shoplist = getShopListUseCase.getShopList()
+    val shopList = getShopListUseCase.getShopList()
 
-
-    fun deleteItem(shopItem: ShopItem){
-        deleteItem.deleteShopItem(shopItem)
-
+    fun deleteShopItem(shopItem: ShopItem) {
+        deleteShopItemUseCase.deleteShopItem(shopItem)
     }
-    fun changeItem(shopItem: ShopItem){
-       val newitem = shopItem.copy(enabled = !shopItem.enabled)
-        ChangeShopItemUseCase.changeShopItem(newitem)
 
+    fun changeEnableState(shopItem: ShopItem) {
+        val newItem = shopItem.copy(enabled = !shopItem.enabled)
+        editShopItemUseCase.changeShopItem(newItem)
     }
 }
