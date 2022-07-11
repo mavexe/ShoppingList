@@ -1,5 +1,7 @@
 package com.damirmustafin.materialdesign.domain
 
+import androidx.lifecycle.LiveData
+
 interface ShopListRepository {
     fun addShopItem(ShopItem:ShopItem)
 
@@ -9,5 +11,5 @@ interface ShopListRepository {
 
     fun getShopItem(ShopItemId:Int):ShopItem
 
-    fun getShopList():List<ShopItem>
+    fun getShopList():LiveData<List<ShopItem>>
 }
