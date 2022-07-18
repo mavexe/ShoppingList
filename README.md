@@ -1,4 +1,4 @@
 # ShoppingList
  Shopping list app
  
- Beta
+ In progress(Using API+Coroutines Flow)
