@@ -6,6 +6,7 @@ import com.damirmustafin.materialdesign.domain.ShopItem
 import com.damirmustafin.materialdesign.domain.ShopItem.Companion.UNDEFINED_ID
 import com.damirmustafin.materialdesign.domain.ShopListRepository
 import java.lang.RuntimeException
+import kotlin.random.Random
 
 object ShopListRepositoryImpl: ShopListRepository {
 
@@ -14,6 +15,12 @@ object ShopListRepositoryImpl: ShopListRepository {
     private val shoplistD = MutableLiveData<List<ShopItem>>()
     private var autoIncrementID = 0
 
+    init{
+        for(i in 0..1000){
+            val item = ShopItem("name $i",i, Random.nextBoolean())
+            addShopItem(item)
+        }
+    }
     override fun addShopItem(ShopItem: ShopItem) {
         if(ShopItem.id == UNDEFINED_ID){
         ShopItem.id = autoIncrementID++ }
