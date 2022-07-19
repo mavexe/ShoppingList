@@ -6,47 +6,47 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.damirmustafin.materialdesign.R
+import com.damirmustafin.materialdesign.data.ShopListRepositoryImpl
 import com.damirmustafin.materialdesign.databinding.ActivityMainBinding
 import com.damirmustafin.materialdesign.databinding.NoteItemBinding
+import com.damirmustafin.materialdesign.domain.ChangeShopItemUseCase
+import com.damirmustafin.materialdesign.domain.DeleteItemUseCase
+import com.damirmustafin.materialdesign.domain.GetShopListUseCase
 import com.damirmustafin.materialdesign.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
-   private lateinit var llShopList:LinearLayout
+   private lateinit var  viewModel:MainViewModel
+    private lateinit var adapter: ShopListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        llShopList = findViewById(R.id.shopList)
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        viewModel.shopList.observe(this) {
-            showList(it)
-            }
-        }
-    private fun showList(list: List<ShopItem>) {
-        llShopList.removeAllViews()
-        for (shopItem in list) {
-            val layoutId = if (shopItem.enabled) {
-                R.layout.note_item
-            } else {
-                R.layout.note_item_disabled
-            }
-            val view = LayoutInflater.from(this).inflate(layoutId, llShopList, false)
-            val tvName = view.findViewById<TextView>(R.id.txViewName)
-            val tvCount = view.findViewById<TextView>(R.id.txViewCount)
-            tvName.text = shopItem.name
-            tvCount.text = shopItem.count.toString()
-            view.setOnLongClickListener {
-                viewModel.changeEnableState(shopItem)
-                true
-            }
-            llShopList.addView(view)
+        setupRecyclerView()
+        Log.d("MyLog", "this main")
+        viewModel.shopList.observe(this,{
+            adapter.Shoplist = it
+        })
+    }
+
+    private fun setupRecyclerView(){
+       val rvShopList = findViewById<RecyclerView>(R.id.rcViewShopList)
+        adapter = ShopListAdapter()
+        with(rvShopList){
+            adapter = adapter
+            recycledViewPool
+                .setMaxRecycledViews(ShopListAdapter.VIEW_TYPE_ENABLED,ShopListAdapter.MAX_POOL_SIZE)
+            recycledViewPool.setMaxRecycledViews(ShopListAdapter.VIEW_TYPE_DISABLED,ShopListAdapter.MAX_POOL_SIZE)
         }
     }
+
+
+
     }
 
 
