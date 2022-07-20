@@ -4,15 +4,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.damirmustafin.materialdesign.R
 import com.damirmustafin.materialdesign.domain.ShopItem
 import org.w3c.dom.Text
 import java.lang.RuntimeException
 
-class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
+class ShopListAdapter: ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCallBack()) {
+
+    var onShopItemLongClick: ((ShopItem) -> Unit)? = null
+    var onShopItemClick: ((ShopItem)-> Unit)? = null
     override fun getItemViewType(position: Int): Int {
-        val item = Shoplist[position]
+        val item = getItem(position)
        return if(item.enabled){
         VIEW_TYPE_ENABLED
         }else{
@@ -20,11 +26,6 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
         }
     }
 
-    var Shoplist = listOf<ShopItem>()
-    set(value){
-        field = value
-        notifyDataSetChanged()
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
         val layout = when(viewType){
             VIEW_TYPE_ENABLED-> R.layout.note_item
@@ -36,17 +37,17 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
-
+        val ShopItem = getItem(position)
+        holder.itemView.setOnLongClickListener{
+            onShopItemLongClick?.invoke(ShopItem)
+            true
+        }
+        holder.itemView.setOnClickListener{
+            onShopItemClick?.invoke(ShopItem)
+        }
     }
 
-    override fun getItemCount(): Int {
-        return Shoplist.size
-    }
 
-    class ShopItemViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
-        val txViewname = itemView.findViewById<TextView>(R.id.txViewName)
-        val txViewCount = itemView.findViewById<TextView>(R.id.txViewCount)
-    }
 
     companion object{
         const val VIEW_TYPE_DISABLED = 100
